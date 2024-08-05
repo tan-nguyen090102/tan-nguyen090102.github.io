@@ -8,13 +8,19 @@ import {
   Typography,
   Box,
   IconButton,
-  Stack,
   Grid,
+  CardMedia,
 } from "@mui/material";
 
 function Portfolio() {
+  const TRANSITION_TIME = 300;
   const [pageIndex, setPageIndex] = React.useState(0);
   const [checked, setChecked] = React.useState(true);
+  const [isEntering, setEntering] = React.useState(false);
+  const [isPreviousButton, setPreviousButton] = React.useState(false);
+  const [isPreviousPage, setPreviousPage] = React.useState(false);
+  const [isFinishExitingOne, setFinishExitingOne] = React.useState(true);
+  const [isFinishExitingTwo, setFinishExitingTwo] = React.useState(false);
 
   useEffect(() => {
     document.title = "Portfolio - Tan Nguyen";
@@ -23,20 +29,44 @@ function Portfolio() {
   const handleChange = (isPrevious) => {
     if (isPrevious) {
       setPageIndex(pageIndex - 1);
+      setPreviousButton(true);
       setChecked((prev) => !prev);
     } else {
       setPageIndex(pageIndex + 1);
+      setPreviousButton(false);
       setChecked((prev) => !prev);
     }
   };
 
-  function currentPage() {
-    switch (pageIndex) {
+  const handleEnter = () => {
+    setEntering(true);
+  };
+
+  const handleOnExit = () => {
+    setPreviousPage(true);
+  };
+
+  const handleExitOne = () => {
+    setFinishExitingOne(true);
+    setFinishExitingTwo(false);
+    setEntering(false);
+    setPreviousPage(false);
+  };
+
+  const handleExitTwo = () => {
+    setFinishExitingTwo(true);
+    setFinishExitingOne(false);
+    setEntering(false);
+    setPreviousPage(false);
+  };
+
+  function currentPage(padding = 0) {
+    switch (pageIndex + padding) {
       case 0:
         return (
           <Box width="190vh">
-            <Typography variant="h1" align="center" display="block">
-              Page 0
+            <Typography variant="h3" align="center" display="block">
+              Hi, I'm Tan Nguyen, and I'm a ...
             </Typography>
           </Box>
         );
@@ -69,7 +99,7 @@ function Portfolio() {
               alignItems="center"
             >
               <Typography variant="h1" align="center" display="block">
-                Page 1
+                Page 2
               </Typography>
             </Box>
           </Box>
@@ -86,7 +116,7 @@ function Portfolio() {
               alignItems="center"
             >
               <Typography variant="h1" align="center" display="block">
-                Page 1
+                Page 3
               </Typography>
             </Box>
           </Box>
@@ -103,7 +133,7 @@ function Portfolio() {
               alignItems="center"
             >
               <Typography variant="h1" align="center" display="block">
-                Page 1
+                Page 4
               </Typography>
             </Box>
           </Box>
@@ -120,7 +150,7 @@ function Portfolio() {
               alignItems="center"
             >
               <Typography variant="h1" align="center" display="block">
-                Page 1
+                Page 5
               </Typography>
             </Box>
           </Box>
@@ -161,20 +191,63 @@ function Portfolio() {
             </IconButton>
           }
         ></FormControlLabel>
+        {isFinishExitingTwo
+          ? pageIndex === 0 && currentPage()
+          : pageIndex === 0 && (
+              <Slide
+                direction="right"
+                in={checked}
+                timeout={{
+                  enter: TRANSITION_TIME,
+                  exit: TRANSITION_TIME,
+                }}
+                mountOnEnter
+                unmountOnExit
+                onEnter={() => handleEnter()}
+                onExit={() => handleOnExit()}
+                onExited={() => handleExitOne()}
+              >
+                {currentPage()}
+              </Slide>
+            )}
         <Box
           display="flex"
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
         >
-          {checked && (
-            <Slide direction="left" in={checked} mountOnEnter unmountOnExit>
-              {currentPage()}
+          {isFinishExitingTwo && (
+            <Slide
+              direction="right"
+              in={checked}
+              timeout={{
+                enter: TRANSITION_TIME,
+                exit: TRANSITION_TIME,
+              }}
+              mountOnEnter
+              unmountOnExit
+              onEnter={() => handleEnter()}
+              onExit={() => handleOnExit()}
+              onExited={() => handleExitOne()}
+            >
+              {currentPage(isPreviousPage ? (isPreviousButton ? 1 : -1) : 0)}
             </Slide>
           )}
-          {!checked && (
-            <Slide direction="right" in={!checked} mountOnEnter unmountOnExit>
-              {currentPage()}
+          {isFinishExitingOne && pageIndex !== 0 && (
+            <Slide
+              direction="left"
+              in={!checked}
+              timeout={{
+                enter: TRANSITION_TIME,
+                exit: TRANSITION_TIME,
+              }}
+              mountOnEnter
+              unmountOnExit
+              onEnter={() => handleEnter()}
+              onExit={() => handleOnExit()}
+              onExited={() => handleExitTwo()}
+            >
+              {currentPage(isPreviousPage ? (isPreviousButton ? 1 : -1) : 0)}
             </Slide>
           )}
         </Box>
