@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
+import "./index.css";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import {
@@ -8,6 +9,7 @@ import {
   Box,
   IconButton,
   Grid,
+  Stack,
 } from "@mui/material";
 
 function Portfolio() {
@@ -20,9 +22,34 @@ function Portfolio() {
   const [isFinishExitingOne, setFinishExitingOne] = React.useState(true);
   const [isFinishExitingTwo, setFinishExitingTwo] = React.useState(false);
 
+  const [y, setY] = React.useState(window.scrollY);
+
   useEffect(() => {
     document.title = "Portfolio - Tan Nguyen";
   });
+
+  const handleNavigation = useCallback(
+    (event) => {
+      const window = event.currentTarget;
+      if (y > window.scrollY) {
+        console.log("scrolling up");
+      } else if (y < window.scrollY) {
+        console.log("scrolling down");
+      }
+      setY(window.scrollY);
+    },
+    [y]
+  );
+
+  useEffect(() => {
+    setY(window.scrollY);
+    window.addEventListener("wheel", handleNavigation);
+    console.log(y);
+
+    return () => {
+      window.removeEventListener("wheel", handleNavigation);
+    };
+  }, [handleNavigation]);
 
   const useTypeWriter = (text, speed = 50) => {
     const [index, setIndex] = React.useState(0);
@@ -45,7 +72,7 @@ function Portfolio() {
     return displayText;
   };
 
-  const handleChange = (isPrevious) => {
+  const handleChange = async (isPrevious) => {
     if (isPrevious) {
       setPageIndex(pageIndex - 1);
       setPreviousButton(true);
@@ -83,23 +110,24 @@ function Portfolio() {
     switch (pageIndex + padding) {
       case 0:
         return (
-          <Box width="190vh">
+          <Box width="190vh" style={{ overflow: "hidden" }}>
             <Typewriter
-              text={"Hi, I'm Tan Nguyen, and I'm a..."}
+              text={"Nice to meet you, I'm Tan Nguyen"}
               speed={50}
             ></Typewriter>
           </Box>
         );
       case 1:
         return (
-          <Box width="190vh" align="center">
+          <Box width="190vh" align="center" style={{ overflow: "hidden" }}>
             <Box
               width="150vh"
               height="70vh"
-              style={{ background: "#FCFBF4" }}
+              style={{ background: "#31b5e0", overflow: "clip" }}
               sx={{ borderRadius: "20px" }}
               justifyContent="center"
               alignItems="center"
+              margin={0}
             >
               <Typography variant="h1" align="center" display="block">
                 Page 1
@@ -113,7 +141,7 @@ function Portfolio() {
             <Box
               width="150vh"
               height="70vh"
-              style={{ background: "#FCFBF4" }}
+              style={{ background: "#31b5e0", overflow: "hidden" }}
               sx={{ borderRadius: "20px" }}
               justifyContent="center"
               alignItems="center"
@@ -130,7 +158,7 @@ function Portfolio() {
             <Box
               width="150vh"
               height="70vh"
-              style={{ background: "#FCFBF4" }}
+              style={{ background: "#31b5e0", overflow: "hidden" }}
               sx={{ borderRadius: "20px" }}
               justifyContent="center"
               alignItems="center"
@@ -147,7 +175,7 @@ function Portfolio() {
             <Box
               width="150vh"
               height="70vh"
-              style={{ background: "#FCFBF4" }}
+              style={{ background: "#31b5e0", overflow: "hidden" }}
               sx={{ borderRadius: "20px" }}
               justifyContent="center"
               alignItems="center"
@@ -160,84 +188,147 @@ function Portfolio() {
         );
       case 5:
         return (
-          <Box width="190vh" align="center">
+          <Box width="190vh" align="center" style={{ overflow: "hidden" }}>
             <Box
               width="150vh"
               height="70vh"
-              style={{ background: "#FCFBF4" }}
-              sx={{ borderRadius: "20px" }}
+              style={{ background: "#31b5e0" }}
+              sx={{ borderRadius: "20px", overflow: "hidden" }}
               justifyContent="center"
               alignItems="center"
             >
               <Typography
                 variant="h3"
                 align="center"
+                justifyContent="center"
                 display="block"
-                marginBottom={10}
+                marginBottom={3}
+                style={{ overflow: "hidden" }}
               >
-                This page is powered by
+                Powered by
               </Typography>
-              <IconButton href="https://react.dev/" target="_blank">
-                <Box
-                  component="img"
-                  sx={{
-                    height: 300,
-                    width: 300,
-                    maxHeight: { xs: 300, md: 200 },
-                    maxWidth: { xs: 300, md: 200 },
-                  }}
-                  alt="React Logo"
-                  src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
-                />
-              </IconButton>
-              <IconButton
-                href="https://github.com/tan-nguyen090102/tan-nguyen090102.github.io"
-                target="_blank"
+              <Box
+                style={{ background: "#FCFBF4", overflow: "hidden" }}
+                sx={{ borderRadius: "20px" }}
+                justifyContent="center"
+                alignItems="center"
+                marginX={15}
               >
-                <Box
-                  component="img"
-                  sx={{
-                    height: 300,
-                    width: 300,
-                    maxHeight: { xs: 300, md: 200 },
-                    maxWidth: { xs: 300, md: 200 },
-                  }}
-                  alt="Github Logo"
-                  src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-                />
-              </IconButton>
-              <IconButton href="https://mui.com/material-ui/" target="_blank">
-                <Box
-                  component="img"
-                  sx={{
-                    height: 300,
-                    width: 300,
-                    maxHeight: { xs: 300, md: 200 },
-                    maxWidth: { xs: 300, md: 200 },
-                  }}
-                  alt="Material UI Logo"
-                  src="https://mui.com/static/logo.png"
-                />
-              </IconButton>
-              <IconButton href="https://www.vecteezy.com/" target="_blank">
-                <Box
-                  component="img"
-                  sx={{
-                    height: 300,
-                    width: 300,
-                    maxHeight: { xs: 300, md: 200 },
-                    maxWidth: { xs: 300, md: 200 },
-                  }}
-                  alt="Vecteezy Logo"
-                  src="https://upload.wikimedia.org/wikipedia/commons/0/00/Vecteezy_logo.svg"
-                />
-              </IconButton>
+                <IconButton href="https://react.dev/" target="_blank">
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 200,
+                      width: 200,
+                      maxHeight: { xs: 200, md: 100 },
+                      maxWidth: { xs: 200, md: 100 },
+                    }}
+                    style={{ overflow: "hidden" }}
+                    alt="React Logo"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
+                  />
+                </IconButton>
+                <IconButton
+                  href="https://github.com/tan-nguyen090102/tan-nguyen090102.github.io"
+                  target="_blank"
+                >
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 200,
+                      width: 200,
+                      maxHeight: { xs: 200, md: 100 },
+                      maxWidth: { xs: 200, md: 100 },
+                    }}
+                    style={{ overflow: "hidden" }}
+                    alt="Github Logo"
+                    src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+                  />
+                </IconButton>
+                <IconButton href="https://mui.com/material-ui/" target="_blank">
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 200,
+                      width: 200,
+                      maxHeight: { xs: 200, md: 100 },
+                      maxWidth: { xs: 200, md: 100 },
+                    }}
+                    style={{ overflow: "hidden" }}
+                    alt="Material UI Logo"
+                    src="https://mui.com/static/logo.png"
+                  />
+                </IconButton>
+                <IconButton href="https://www.vecteezy.com/" target="_blank">
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 200,
+                      width: 200,
+                      maxHeight: { xs: 200, md: 100 },
+                      maxWidth: { xs: 200, md: 100 },
+                    }}
+                    style={{ overflow: "hidden" }}
+                    alt="Vecteezy Logo"
+                    src="https://upload.wikimedia.org/wikipedia/commons/0/00/Vecteezy_logo.svg"
+                  />
+                </IconButton>
+              </Box>
+              <Typography
+                variant="h5"
+                align="center"
+                justifyContent="center"
+                display="block"
+                marginTop={3}
+                style={{ overflow: "hidden" }}
+              >
+                CONTACT ME AT
+                <Box spacing={2} style={{ overflow: "hidden" }}>
+                  <IconButton
+                    href="https://www.linkedin.com/in/tan-nguyen-87691428b/"
+                    target="_blank"
+                  >
+                    <Box
+                      component="img"
+                      sx={{
+                        height: 100,
+                        width: 100,
+                        maxHeight: { xs: 100, md: 50 },
+                        maxWidth: { xs: 100, md: 50 },
+                      }}
+                      style={{ overflow: "hidden" }}
+                      alt="Linkedin Logo"
+                      src="https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg"
+                    />
+                  </IconButton>
+                  <IconButton
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=nguyenthanhtan090102@gmail.com"
+                    target="_blank"
+                  >
+                    <Box
+                      component="img"
+                      sx={{
+                        height: 100,
+                        width: 100,
+                        maxHeight: { xs: 100, md: 50 },
+                        maxWidth: { xs: 100, md: 50 },
+                      }}
+                      style={{ overflow: "hidden" }}
+                      alt="Gmail Logo"
+                      src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
+                    />
+                  </IconButton>
+                </Box>
+              </Typography>
+              <Typography marginTop={10}>
+                Created by Tan Nguyen © 2024
+              </Typography>
             </Box>
           </Box>
         );
       default:
         return (
-          <Box width="190vh" align="center">
+          <Box width="190vh" align="center" style={{ overflow: "hidden" }}>
             <Typography variant="h1" align="center" display="block">
               404 Page Not Found
             </Typography>
@@ -250,76 +341,52 @@ function Portfolio() {
     const displayText = useTypeWriter(text, speed);
 
     return (
-      <Typography variant="h3" align="center" display="block" id="title">
+      <Typography
+        variant="h3"
+        align="center"
+        display="block"
+        id="title"
+        fontWeight={"fontWeightBold"}
+      >
         {displayText}
       </Typography>
     );
   };
 
   return (
-    <Box style={{ background: "#ADD8E6", zIndex: 0 }}>
-      <Box
+    <>
+      <Stack direction="column" style={{ overflow: "hidden" }}>
+        <div className="low-opacity-background"></div>
+      </Stack>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={1}
         height="100vh"
-        style={{
-          background: `url('https://static.vecteezy.com/system/resources/previews/011/887/512/large_2x/halftone-dotted-background-free-png.png')`,
-          transform: "rotate(45deg)",
-          overflow: "visible",
-          paddingLeft: "50px",
-          marginLeft: "-55px",
-        }}
+        width="190vh"
+        margin={0}
       >
-        <Grid
-          wrap="nowrap"
-          container
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-          height="100vh"
-          marginLeft={1}
-          style={{ zIndex: 2, transform: "rotate(315deg)" }}
-        >
-          <FormControlLabel
-            control={
-              <IconButton
-                sx={{
-                  visibility: pageIndex === 0 ? "hidden" : "visible",
-                }}
-                disabled={pageIndex === 0}
-                onClick={() => handleChange(true)}
-                style={{ zIndex: 3 }}
-              >
-                <ArrowBackIosNewOutlinedIcon></ArrowBackIosNewOutlinedIcon>
-              </IconButton>
-            }
-          ></FormControlLabel>
-          {isFinishExitingTwo
-            ? pageIndex === 0 && currentPage()
-            : pageIndex === 0 && (
-                <Slide
-                  direction="right"
-                  in={checked}
-                  timeout={{
-                    enter: TRANSITION_TIME,
-                    exit: TRANSITION_TIME,
-                  }}
-                  mountOnEnter
-                  unmountOnExit
-                  onEnter={() => handleEnter()}
-                  onExit={() => handleOnExit()}
-                  onExited={() => handleExitOne()}
-                >
-                  {currentPage()}
-                </Slide>
-              )}
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-          >
-            {isFinishExitingTwo && (
+        <FormControlLabel
+          control={
+            <IconButton
+              sx={{
+                visibility: pageIndex === 0 ? "hidden" : "visible",
+                transform: "rotate(90deg)",
+              }}
+              disabled={pageIndex === 0}
+              onClick={() => handleChange(true)}
+              style={{ zIndex: 1, position: "absolute", overflow: "hidden" }}
+            >
+              <ArrowBackIosNewOutlinedIcon></ArrowBackIosNewOutlinedIcon>
+            </IconButton>
+          }
+        ></FormControlLabel>
+        {isFinishExitingTwo
+          ? pageIndex === 0 && currentPage()
+          : pageIndex === 0 && (
               <Slide
-                direction="right"
+                direction="up"
                 in={checked}
                 timeout={{
                   enter: TRANSITION_TIME,
@@ -331,44 +398,68 @@ function Portfolio() {
                 onExit={() => handleOnExit()}
                 onExited={() => handleExitOne()}
               >
-                {currentPage(isPreviousPage ? (isPreviousButton ? 1 : -1) : 0)}
+                {currentPage()}
               </Slide>
             )}
-            {isFinishExitingOne && pageIndex !== 0 && (
-              <Slide
-                direction="left"
-                in={!checked}
-                timeout={{
-                  enter: TRANSITION_TIME,
-                  exit: TRANSITION_TIME,
-                }}
-                mountOnEnter
-                unmountOnExit
-                onEnter={() => handleEnter()}
-                onExit={() => handleOnExit()}
-                onExited={() => handleExitTwo()}
-              >
-                {currentPage(isPreviousPage ? (isPreviousButton ? 1 : -1) : 0)}
-              </Slide>
-            )}
-          </Box>
-          <FormControlLabel
-            control={
-              <IconButton
-                sx={{
-                  visibility: pageIndex === 5 ? "hidden" : "visible",
-                }}
-                disabled={pageIndex === 5}
-                onClick={() => handleChange(false)}
-                style={{ zIndex: 3 }}
-              >
-                <ArrowForwardIosOutlinedIcon></ArrowForwardIosOutlinedIcon>
-              </IconButton>
-            }
-          ></FormControlLabel>
-        </Grid>
-      </Box>
-    </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          margin={0}
+        >
+          {isFinishExitingTwo && (
+            <Slide
+              direction="up"
+              in={checked}
+              timeout={{
+                enter: TRANSITION_TIME,
+                exit: TRANSITION_TIME,
+              }}
+              mountOnEnter
+              unmountOnExit
+              onEnter={() => handleEnter()}
+              onExit={() => handleOnExit()}
+              onExited={() => handleExitOne()}
+            >
+              {currentPage(isPreviousPage ? (isPreviousButton ? 1 : -1) : 0)}
+            </Slide>
+          )}
+          {isFinishExitingOne && pageIndex !== 0 && (
+            <Slide
+              direction="down"
+              in={!checked}
+              timeout={{
+                enter: TRANSITION_TIME,
+                exit: TRANSITION_TIME,
+              }}
+              mountOnEnter
+              unmountOnExit
+              onEnter={() => handleEnter()}
+              onExit={() => handleOnExit()}
+              onExited={() => handleExitTwo()}
+            >
+              {currentPage(isPreviousPage ? (isPreviousButton ? 1 : -1) : 0)}
+            </Slide>
+          )}
+        </Box>
+        <FormControlLabel
+          control={
+            <IconButton
+              sx={{
+                visibility: pageIndex === 5 ? "hidden" : "visible",
+                transform: "rotate(90deg)",
+              }}
+              disabled={pageIndex === 5}
+              onClick={() => handleChange(false)}
+              style={{ zIndex: 1, position: "absolute", overflow: "hidden" }}
+            >
+              <ArrowForwardIosOutlinedIcon></ArrowForwardIosOutlinedIcon>
+            </IconButton>
+          }
+        ></FormControlLabel>
+      </Grid>
+    </>
   );
 }
 
