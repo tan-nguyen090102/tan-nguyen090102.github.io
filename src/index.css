@@ -46,3 +46,53 @@ code {
   background-color: #FCFBF4;
   height: 600px;
 }
+
+.stable-cursor::after {
+  content: "|";
+}
+
+.blinking-cursor::after {
+  content: "|";
+  animation: blink 1s step-start infinite;
+}
+
+.hopping-right-arrow {
+  content: "";
+  animation: right-hopping 1s linear infinite;
+}
+
+.hopping-left-arrow {
+  content: "";
+  animation: left-hopping 1s linear infinite;
+}
+
+.stay-arrow {
+  content: "";
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes right-hopping {
+  0%, 100% {
+    bottom: 350px;
+    background-color:rgb(255, 255, 255)
+  }
+  50% {
+    bottom: 345px;
+    background-color:rgb(147, 147, 147)
+  }
+}
+
+@keyframes left-hopping {
+  0%, 100% {
+    bottom: 350px;
+    background-color:rgb(255, 255, 255)
+  }
+  50% {
+    bottom: 355px;
+    background-color:rgb(147, 147, 147)
+  }
+}

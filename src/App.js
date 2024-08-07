@@ -21,7 +21,9 @@ function Portfolio() {
   const [isPreviousPage, setPreviousPage] = React.useState(false);
   const [isFinishExitingOne, setFinishExitingOne] = React.useState(true);
   const [isFinishExitingTwo, setFinishExitingTwo] = React.useState(false);
-
+  const [isEndText, setEndText] = React.useState(false);
+  const [isLeftHopping, setLeftHopping] = React.useState(false);
+  const [isRightHopping, setRightHopping] = React.useState(false);
   const [y, setY] = React.useState(window.scrollY);
 
   useEffect(() => {
@@ -44,7 +46,6 @@ function Portfolio() {
   useEffect(() => {
     setY(window.scrollY);
     window.addEventListener("wheel", handleNavigation);
-    console.log(y);
 
     return () => {
       window.removeEventListener("wheel", handleNavigation);
@@ -57,8 +58,11 @@ function Portfolio() {
       () => text.slice(0, index),
       [text, index]
     );
+
     useEffect(() => {
-      if (index >= text.length) return;
+      if (index >= text.length) {
+        return;
+      }
 
       const timeout = setTimeout(() => {
         setIndex((i) => i + 1);
@@ -82,6 +86,15 @@ function Portfolio() {
       setPreviousButton(false);
       setChecked((prev) => !prev);
     }
+    setEndText(false);
+  };
+
+  const handleMouseEnter = (isLeft) => {
+    isLeft ? setLeftHopping(true) : setRightHopping(true);
+  };
+
+  const handleMouseExit = (isLeft) => {
+    isLeft ? setLeftHopping(false) : setRightHopping(false);
   };
 
   const handleEnter = () => {
@@ -110,11 +123,31 @@ function Portfolio() {
     switch (pageIndex + padding) {
       case 0:
         return (
-          <Box width="190vh" style={{ overflow: "hidden" }}>
-            <Typewriter
-              text={"Nice to meet you, I'm Tan Nguyen"}
-              speed={50}
-            ></Typewriter>
+          <Box
+            width="190vh"
+            justifyContent="center"
+            alignContent="center"
+            style={{ overflow: "hidden" }}
+          >
+            {!isEndText && (
+              <Typewriter
+                text={"Nice to meet you, I'm Tan Nguyen!"}
+                speed={50}
+              ></Typewriter>
+            )}
+            {isEndText && (
+              <Typography
+                inline="true"
+                variant="h3"
+                align="center"
+                display="block"
+                id="title"
+                fontWeight={"fontWeightBold"}
+                className="blinking-cursor"
+              >
+                Nice to meet you, I'm Tan Nguyen!
+              </Typography>
+            )}
           </Box>
         );
       case 1:
@@ -340,13 +373,20 @@ function Portfolio() {
   const Typewriter = ({ text, speed }) => {
     const displayText = useTypeWriter(text, speed);
 
+    if (displayText === text) {
+      setEndText(true);
+      return;
+    }
+
     return (
       <Typography
+        inline="true"
         variant="h3"
         align="center"
         display="block"
         id="title"
         fontWeight={"fontWeightBold"}
+        className={displayText === text ? "blinking-cursor" : "stable-cursor"}
       >
         {displayText}
       </Typography>
@@ -355,17 +395,19 @@ function Portfolio() {
 
   return (
     <>
-      <Stack direction="column" style={{ overflow: "hidden" }}>
-        <div className="low-opacity-background"></div>
-      </Stack>
+      <div
+        className="low-opacity-background"
+        style={{ overflow: "hidden" }}
+      ></div>
       <Grid
         container
         justifyContent="center"
         alignItems="center"
         spacing={1}
         height="100vh"
-        width="190vh"
+        maxWidth={true}
         margin={0}
+        style={{ overflow: "hidden" }}
       >
         <FormControlLabel
           control={
@@ -377,6 +419,9 @@ function Portfolio() {
               disabled={pageIndex === 0}
               onClick={() => handleChange(true)}
               style={{ zIndex: 1, position: "absolute", overflow: "hidden" }}
+              className={isLeftHopping ? "hopping-left-arrow" : "stay-arrow"}
+              onMouseEnter={() => handleMouseEnter(true)}
+              onMouseLeave={() => handleMouseExit(true)}
             >
               <ArrowBackIosNewOutlinedIcon></ArrowBackIosNewOutlinedIcon>
             </IconButton>
@@ -453,6 +498,9 @@ function Portfolio() {
               disabled={pageIndex === 5}
               onClick={() => handleChange(false)}
               style={{ zIndex: 1, position: "absolute", overflow: "hidden" }}
+              className={isRightHopping ? "hopping-right-arrow" : "stay-arrow"}
+              onMouseEnter={() => handleMouseEnter(false)}
+              onMouseLeave={() => handleMouseExit(false)}
             >
               <ArrowForwardIosOutlinedIcon></ArrowForwardIosOutlinedIcon>
             </IconButton>
